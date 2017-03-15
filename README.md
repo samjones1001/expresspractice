@@ -5,7 +5,7 @@ To install, pass the following commands in the terminal:
 ```
 brew update
 brew install mongodb
-```s
+```
 
 Then set up the directory to which the `mongodb` procress will write data. By default, this is the `/data/db` directory. Therefore, pass the following commands in the terminal:
 
