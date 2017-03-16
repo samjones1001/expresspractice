@@ -17,7 +17,6 @@ var cons = require('consolidate');
 var db = require('./db');
 
 //require in mongoose library into this file
-var mongoose_config = require('./mongoose_connect');
 var mongoose = require('mongoose');
 
 // view engine setup
