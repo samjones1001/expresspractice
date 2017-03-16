@@ -13,8 +13,12 @@ var clue = require('./routes/clue');
 var app = express();
 var cons = require('consolidate');
 
-//require our database into this file
+//require our mongoclient into this file
 var db = require('./db');
+
+//require in mongoose library into this file
+var mongoose_config = require('./mongoose_connect');
+var mongoose = require('mongoose');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -51,7 +55,7 @@ app.use(function(err, req, res, next) {
 });
 
 
-// Connect to Mongo on start
+// Connect to MongoDB on start
 db.connect('mongodb://localhost:27017/newDB', function(err) {
   if (err) {
     console.log('Unable to connect to Mongo.')
@@ -63,13 +67,7 @@ db.connect('mongodb://localhost:27017/newDB', function(err) {
   }
 })
 
-var mongoose = require('mongoose');
+//Connect to Mongoose on start
 mongoose.connect('mongodb://localhost/newDB');
-
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-  // we're connected!
-});
 
 module.exports = app;
