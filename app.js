@@ -5,11 +5,16 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+//require our routes into this file
 var index = require('./routes/index');
 var users = require('./routes/users');
+var clue = require('./routes/clue');
 
 var app = express();
 var cons = require('consolidate');
+
+//require our database into this file
+var db = require('./db');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -25,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/clue', clue);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -43,5 +49,18 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
+// Connect to Mongo on start
+db.connect('mongodb://localhost:27017/newDB', function(err) {
+  if (err) {
+    console.log('Unable to connect to Mongo.')
+    process.exit(1)
+  } else {
+    app.listen(3000, function() {
+      console.log('Listening on port 3000...')
+    })
+  }
+})
 
 module.exports = app;
