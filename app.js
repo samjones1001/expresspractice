@@ -6,8 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 //require our routes into this file
-var index = require('./routes/index');
-var users = require('./routes/users');
 var clue = require('./routes/clue');
 
 var app = express();
@@ -31,8 +29,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/users', users);
+
 app.use('/clue', clue);
 
 // catch 404 and forward to error handler
@@ -55,7 +52,7 @@ app.use(function(err, req, res, next) {
 
 
 // Connect to MongoDB on start
-db.connect('mongodb://localhost:27017/newDB', function(err) {
+db.connect('mongodb://localhost:27017/treasureHunt_dev', function(err) {
   if (err) {
     console.log('Unable to connect to Mongo.')
     process.exit(1)
@@ -67,6 +64,6 @@ db.connect('mongodb://localhost:27017/newDB', function(err) {
 })
 
 //Connect to Mongoose on start
-mongoose.connect('mongodb://localhost/newDB');
+mongoose.connect('mongodb://localhost/treasureHunt_dev');
 
 module.exports = app;
