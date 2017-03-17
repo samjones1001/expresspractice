@@ -10,15 +10,15 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var clue = require('./routes/clue');
 
+var env = process.env.NODE_ENV || 'development';
+var config = require('./config')[env];
+
 var app = express();
 var cons = require('consolidate');
 
-//require our mongoclient into this file
-var db = require('./db');
-
 //require in mongoose library into this file
 var mongoose = require('mongoose');
-
+var port = process.env.PORT || 3000;
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -53,20 +53,21 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+connect()
+  .on('error', console.log)
+  .on('disconnected', connect)
+  .once('open', listen);
 
-// Connect to MongoDB on start
-db.connect('mongodb://localhost:27017/newDB', function(err) {
-  if (err) {
-    console.log('Unable to connect to Mongo.')
-    process.exit(1)
-  } else {
-    app.listen(3000, function() {
-      console.log('Listening on port 3000...')
-    })
-  }
-})
+function listen () {
+  if (app.get('env') === 'test') return;
+  app.listen(port);
+  console.log('Express app started on port ' + port);
+}
 
-//Connect to Mongoose on start
-mongoose.connect('mongodb://localhost/newDB');
+function connect () {
+  var options = { server: { socketOptions: { keepAlive: 1 } } };
+  return mongoose.connect(config.db, options).connection;
+}
+
 
 module.exports = app;
